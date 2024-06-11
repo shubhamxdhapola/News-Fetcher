@@ -181,5 +181,4 @@ elif userInput == "3":
 
 # If user inputs a unavailable option
 else: print(">> Invalid input!")
-
          
