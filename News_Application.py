@@ -32,18 +32,28 @@ def country_news(country,readOrListen):
             for i in range(10):
 
                 # Extract article details
-                print(headLine:=f"\nHeadline : {i+1}")
-                print(title:=f'Title : {countryNews["articles"][i]["title"]}')
-                print(description:=f'Description : {countryNews["articles"][i]["description"]}')
-                print(f'Read More : {countryNews["articles"][i]["url"]}')
-                print(f'Source : {countryNews["articles"][i]["source"]["name"]}')
-                print("")
+                headLine = i + 1
+                title = countryNews["articles"][i]["title"]
+                description = countryNews["articles"][i]["description"]
+                readMore = countryNews["articles"][i]["url"]
+                source = countryNews["articles"][i]["source"]["name"]
+                
+                line = '__'
+                print(line*100)
+
+                print(f"\n>> Headline : {headLine}")
+                print(f">> Title : {title}")
+                print(f">> Description: {description}")
+                print(f">> Read More : {readMore}")
+                print(f">> Source : {source}")
 
                 # If readOrListen is set to 'Listen', use text-to-speech to read out the article details
                 if readOrListen == 'Listen':
-                    speaker.Speak(headLine)
-                    speaker.Speak(title)
-                    speaker.Speak(description)
+                    speaker.Speak(f'Headline : {headLine}')
+                    speaker.Speak(f'Title : {title}')
+                    speaker.Speak(f'Description : {description}')
+            
+            print(line*100)
 
         # Print an error message if the country code is invalid
         else: print(">> No news related to this country")
@@ -69,17 +79,28 @@ def topic_news(topic,readOrListen):
             for i in range(10):
 
                 # Extract article details
-                print(headLine:=f"\nHeadline : {i+1}")
-                print(title:=f'Title : {topicNews["articles"][i]["title"]}')
-                print(description:=f'Description : {topicNews["articles"][i]["description"]}')
-                print(f'Read More : {topicNews["articles"][i]["url"]}')
-                print(f'Source : {topicNews["articles"][i]["source"]["name"]}')
+                headLine = i + 1
+                title = topicNews["articles"][i]["title"]
+                description = topicNews["articles"][i]["description"]
+                readMore = topicNews["articles"][i]["url"]
+                source = topicNews["articles"][i]["source"]["name"]
+
+                line = '__'
+                print(line*100)                                    
+
+                print(f">> Headline : {headLine}")
+                print(f">> Title : {title}")
+                print(f">> Description: {description}")
+                print(f">> Read More : {readMore}")
+                print(f">> Source : {source}")
 
                 # If readOrListen is set to 'Listen', use text-to-speech to read out the article details
                 if readOrListen == 'Listen':
-                    speaker.Speak(headLine)
-                    speaker.Speak(title)
-                    speaker.Speak(description)
+                    speaker.Speak(f'Headline : {headLine}')
+                    speaker.Speak(f'Title : {title}')
+                    speaker.Speak(f'Description : {description}')
+            
+            print(line*100)
 
         # Print an error message if the topic is invalid
         else: print(">> No news related to this topic")
@@ -105,18 +126,28 @@ def country_topic_news(country,topic,readOrListen):
             for i in range(10):
 
                 # Extract article details
-                print(headLine:=f"\nHeadline : {i+1}")
-                print(title:=f'Title : {countryTopicNews["articles"][i]["title"]}')
-                print(description:=f'Description : {countryTopicNews["articles"][i]["description"]}')
-                print(f'Read More : {countryTopicNews["articles"][i]["url"]}')
-                print(f'Source : {countryTopicNews["articles"][i]["source"]["name"]}')
-                print("")
+                headLine = i + 1
+                title = countryTopicNews["articles"][i]["title"]
+                description = countryTopicNews["articles"][i]["description"]
+                readMore = countryTopicNews["articles"][i]["url"]
+                source = countryTopicNews["articles"][i]["source"]["name"]
+
+                line = '__'
+                print(line*100)
+
+                print(f">> Headline : {headLine}")
+                print(f">> Title : {title}")
+                print(f">> Description: {description}")
+                print(f">> Read More : {readMore}")
+                print(f">> Source : {source}")
 
                 # If readOrListen is set to 'Listen', use text-to-speech to read out the article details
                 if readOrListen == 'Listen':
                     speaker.Speak(headLine)
                     speaker.Speak(title)
                     speaker.Speak(description)
+                    
+            print(line*100)
 
         # Print an error message if the topic is invalid
         else: print(">> No news related to this country or topic")
@@ -140,7 +171,7 @@ if userInput == "1":
 
     country = input(">> Enter country : ")
     country = country[0:2].lower() # Ensure country code is 2 characters and lowercase
-    readOrListen = input(">> Do you want to read or listen ? :").title()
+    readOrListen = input(">> Do you want to read or listen ? : ").title()
 
     if (readOrListen =='Read') or (readOrListen =='Listen'):   
         country_news(country,readOrListen)
