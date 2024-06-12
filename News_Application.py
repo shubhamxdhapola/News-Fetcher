@@ -14,202 +14,245 @@ countries = ['ae','ar','at','au','be','bg','br','ca','ch','cn','co','cu','cz','d
 # List of valid news topics
 topics = ['Business', 'Entertainment', 'General', 'Health', 'Science', 'Technology']
 
+# Possible topics for user reference
+possibleTopics = ">> Possible topics : Business, Entertainment, General, Health, Science, Technology"
+
 # API Key for News API
 API_KEY = 'fcaaa5e72e894f85856c8bd6ceb6c96f'
 
-# Function to get news headlines from a specific country
-def country_news(country,readOrListen):
+# Function to get news headlines from a specific country or topic
+def fetch_and_display_news(country = "", topic = "", readOrListen = "", userInput=""):
+  
+  """
+  Fetch and display news based on the user's choice.
+  
+  Args:
+  country (str): Country code for news.
+  topic (str): News topic/category.
+  readOrListen (str): User's preference to read or listen to the news.
+  userInput (str): User's choice for fetching news (country, topic, or both).
+  
+  Returns:
+  None
+  """
+  
+  try:
+      
+      # Construct API request URL based on user input
+      if userInput == "1":
+            # Send a GET request to the News API to retrieve top headlines for a specific country
+            response = requests.get(f"https://newsapi.org/v2/top-headlines?language=en&country={country}&apiKey={API_KEY}")
+        
+      elif userInput == "2":
+            # Send a GET request to the News API to retrieve top headlines for a specific topic
+            response = requests.get(f"https://newsapi.org/v2/top-headlines?language=en&category={topic}&apiKey={API_KEY}")
 
-    try:
-        # Send a GET request to the News API to retrieve top headlines for a specific country
-        response = requests.get(f"https://newsapi.org/v2/top-headlines?language=en&country={country}&apiKey={API_KEY}")
-        countryNews = json.loads(response.text)
+      elif userInput == "3":
+            # Send a GET request to the News API to retrieve top headlines for a specific country and topic
+            response = requests.get(f"https://newsapi.org/v2/top-headlines?language=en&country={country}&category={topic}&apiKey={API_KEY}")
+        
+      # Load response data
+      news = json.loads(response.text)
 
-        # Check if the country code is valid
-        if country in countries:
+      # Iterate over the top 10 headlines
+      for i in range(10):
 
-            # Iterate over the top 10 headlines
-            for i in range(10):
-
-                # Extract article details
-                headLine = i + 1
-                title = countryNews["articles"][i]["title"]
-                description = countryNews["articles"][i]["description"]
-                readMore = countryNews["articles"][i]["url"]
-                source = countryNews["articles"][i]["source"]["name"]
-                
-                line = '__'
-                print(line*100)
-
-                print(f"\n>> Headline : {headLine}")
-                print(f">> Title : {title}")
-                print(f">> Description: {description}")
-                print(f">> Read More : {readMore}")
-                print(f">> Source : {source}")
-
-                # If readOrListen is set to 'Listen', use text-to-speech to read out the article details
-                if readOrListen == 'Listen':
-                    speaker.Speak(f'Headline : {headLine}')
-                    speaker.Speak(f'Title : {title}')
-                    speaker.Speak(f'Description : {description}')
+        # Extract article details
+        headLine = i + 1
+        title = news["articles"][i]["title"]
+        description = news["articles"][i]["description"]
+        readMore = news["articles"][i]["url"]
+        source = news["articles"][i]["source"]["name"]
             
-            print(line*100)
+        # Print article details
+        line = '__'
+        print(line*100)
+        print(f"\n>> Headline : {headLine}")
+        print(f">> Title : {title}")
+        print(f">> Description: {description}")
+        print(f">> Read More : {readMore}")
+        print(f">> Source : {source}")
 
-        # Print an error message if the country code is invalid
-        else: print(">> No news related to this country")
-
-    # Handle exceptions that occur during the request
-    except requests.RequestException as e:
-          print(f"An error occured : {e}")
-
-
-# Function to get news headlines on a specific topic       
-def topic_news(topic,readOrListen):
-
-    try:
-
-        # Send a GET request to the News API to retrieve top headlines for a specific topic
-        response = requests.get(f"https://newsapi.org/v2/top-headlines?language=en&category={topic}&apiKey={API_KEY}")
-        topicNews = json.loads(response.text)
-
-        # Check if the topic is valid
-        if topic in topics:
-
-            # Iterate over the top 10 headlines
-            for i in range(10):
-
-                # Extract article details
-                headLine = i + 1
-                title = topicNews["articles"][i]["title"]
-                description = topicNews["articles"][i]["description"]
-                readMore = topicNews["articles"][i]["url"]
-                source = topicNews["articles"][i]["source"]["name"]
-
-                line = '__'
-                print(line*100)                                    
-
-                print(f">> Headline : {headLine}")
-                print(f">> Title : {title}")
-                print(f">> Description: {description}")
-                print(f">> Read More : {readMore}")
-                print(f">> Source : {source}")
-
-                # If readOrListen is set to 'Listen', use text-to-speech to read out the article details
-                if readOrListen == 'Listen':
-                    speaker.Speak(f'Headline : {headLine}')
-                    speaker.Speak(f'Title : {title}')
-                    speaker.Speak(f'Description : {description}')
+        # If readOrListen is set to 'Listen', use text-to-speech to read out the article details
+        if readOrListen == 'Listen':
+            speaker.Speak(f'Headline : {headLine}')
+            speaker.Speak(f'Title : {title}')
+            speaker.Speak(f'Description : {description}')
             
-            print(line*100)
+      print(line*100)
 
-        # Print an error message if the topic is invalid
-        else: print(">> No news related to this topic")
-
-    # Handle exceptions that occur during the request
-    except requests.RequestException as e:
+  # Handle exceptions that occur during the request
+  except requests.RequestException as e:
           print(f"An error occured : {e}")
 
+def display_main_menu():
 
-# Function to get news headlines on a specific topic from a specific country
-def country_topic_news(country,topic,readOrListen):
+    """
+    Display the main menu for user input.
+    
+    Returns:
+    None                     
+    """
+    print("\nChoose an option to get the latest news:")
+    print(">> Press 1 to get the 'Top 10' headlines from a specific country")
+    print(">> Press 2 to get the 'Top 10' headlines on a specific topic")
+    print(">> Press 3 to get the 'Top 10' headlines on a specific topic from a specific country")
 
-    try:
+def taking_user_choice():
 
-        # Send a GET request to the News API to retrieve top headlines for a specific country and topic
-        response = requests.get(f"https://newsapi.org/v2/top-headlines?language=en&country={country}&category={topic}&apiKey={API_KEY}")
-        countryTopicNews = json.loads(response.text)
+    """
+    Get the user's choice from the main menu.
+    
+    Returns:
+    str: The user's choice (1, 2, or 3) or None if maximum attempts are exceeded.
+    """
 
-        # Check if the topic is valid
+    attempts = 0
+    while attempts < 3:
+
+        userInput = input("\n>> Enter your choice (1, 2, or 3) : ")
+
+        if userInput in ['1','2','3']:
+            return userInput
+            
+        else: print(">> Invalid input! Please enter (1, 2, or 3)")
+        attempts += 1
+
+    print("\n>> Maximum attempts exceeded")
+    return None
+
+def get_country():
+
+    """
+    Get the country code from the user.
+    
+    Returns:
+    str: The valid country code or None if maximum attempts are exceeded.
+    """
+
+    attempts = 0
+    while attempts < 3:
+
+        country = input("\n>> Enter country : ").lower()
+        country = country[0:2] # Ensure country code is 2 characters and lowercase
+
+        if country in countries: 
+            return country
+
+        else: print(">> Sorry! no news available for this country enter a different country")
+        attempts += 1
+
+    print("\n>> Maximum attempts exceeded")
+    return None
+
+def get_read_or_listen():
+
+    """
+    Get the user's preference to read or listen to the news.
+    
+    Returns:
+    str: 'Read' or 'Listen' or None if maximum attempts are exceeded.
+    """
+
+    attempts = 0
+    while attempts < 3:
+
+        readOrListen = input("\n>> Would you like to 'Read' or 'Listen' to the news? : ").title()
+    
+        if readOrListen in ['Read','Listen'] :
+            return readOrListen
+
+        else: print(">> Please enter 'Read' or 'Listen")
+        attempts += 1
+
+    print("\n>> Maximum attempts exceeded!")
+    return None
+
+    
+def get_topic():
+
+    """
+    Get the news topic from the user.
+    
+    Returns:
+    str: The valid news topic or None if maximum attempts are exceeded.
+    """
+    attempts = 0
+    while attempts < 3:
+
+        print(f'\n{possibleTopics}')
+        topic = input(">> Enter topic : ").title()
+
         if topic in topics:
-
-            # Iterate over the top 10 headlines
-            for i in range(10):
-
-                # Extract article details
-                headLine = i + 1
-                title = countryTopicNews["articles"][i]["title"]
-                description = countryTopicNews["articles"][i]["description"]
-                readMore = countryTopicNews["articles"][i]["url"]
-                source = countryTopicNews["articles"][i]["source"]["name"]
-
-                line = '__'
-                print(line*100)
-
-                print(f">> Headline : {headLine}")
-                print(f">> Title : {title}")
-                print(f">> Description: {description}")
-                print(f">> Read More : {readMore}")
-                print(f">> Source : {source}")
-
-                # If readOrListen is set to 'Listen', use text-to-speech to read out the article details
-                if readOrListen == 'Listen':
-                    speaker.Speak(headLine)
-                    speaker.Speak(title)
-                    speaker.Speak(description)
-                    
-            print(line*100)
-
-        # Print an error message if the topic is invalid
-        else: print(">> No news related to this country or topic")
-
-    # Handle exceptions that occur during the request
-    except requests.RequestException as e:
-          print(f"An error occured : {e}")
+            return topic
+            
+        else: print(">> Sorry! no news available around this topic")
+        attempts += 1
     
+    else:
+        print("\n>> Maximum attempts exceeded!")
+        return None
 
-# Main menu for user input
-print("\n>> Press 1 to get the 'Top 10' headlines from a specific country")
-print(">> Press 2 to get the 'Top 10' headlines on a specific topic")
-print(">> Press 3 to get the 'Top 10' headlines on a specific topic from a specific country")
-userInput = input("\n>> Enter Here : ")
+def get_news(userInput):
 
-# Possible topics for user reference
-possibleTopics = ">> Possible topics : Business, Entertainment, General, Health, Science, Technology"
+    """
+    Get the news based on the user's input choice.
     
-# Option 1: Get news by country    
-if userInput == "1":
+    Args:
+    user_input (str): The user's choice for fetching news by country, topic, or both.
 
-    country = input(">> Enter country : ")
-    country = country[0:2].lower() # Ensure country code is 2 characters and lowercase
-    readOrListen = input(">> Do you want to read or listen ? : ").title()
+    Returns:
+    None
+    """
 
-    if (readOrListen =='Read') or (readOrListen =='Listen'):   
-        country_news(country,readOrListen)
+    if userInput == "1":
+        country = get_country()
+        
+        if country:
+            readOrListen = get_read_or_listen()
 
-    else: print(">> Enter read or listen")
+            if readOrListen:
+                fetch_and_display_news(country = country, readOrListen = readOrListen, userInput = userInput)
+    
+    elif userInput == "2":
+        topic = get_topic()
+
+        if topic:
+            readOrListen = get_read_or_listen()
+
+            if readOrListen:
+                fetch_and_display_news(topic = topic, readOrListen = readOrListen, userInput = userInput)
+    
+    elif userInput == "3":
+        country = get_country()
+
+        if country:
+            topic = get_topic()
+
+            if topic:
+                readOrListen = get_read_or_listen()
+
+                if readOrListen:
+                    fetch_and_display_news(country = country, topic = topic, readOrListen = readOrListen, userInput = userInput)
+
+def main():
+
+    """
+    Main function to run the news fetching program.
+    
+    Returns:
+    None
+    """
+
+    display_main_menu()
+    userInput = taking_user_choice()
+
+    if userInput:
+        get_news(userInput)
 
 
-# Option 2: Get news by topic
-elif userInput == "2":
+if __name__ == "__main__":
+    main()
 
-    print(possibleTopics)
-    topic = input(">> Enter topic : ")
 
-    readOrListen = input(">> Do you want to read or listen ? :").title()
-    if (readOrListen =='Read') or (readOrListen =='Listen'):   
-            topic_news(topic.title(),readOrListen)
 
-    else: print(">> Enter read or listen")
-
-# Option 3: Get news by country and topic
-elif userInput == "3":
-
-    country = input(">> Enter country : ")
-    country = country[0:2].lower() # Ensure country code is 2 characters and lowercase
-
-    if country in countries:
-
-        print(possibleTopics)
-        topic = input(">> Enter topic : ")
-
-        readOrListen = input(">> Do you want to read or listen ? :").title()
-        if (readOrListen =='Read') or (readOrListen =='Listen'):   
-            country_topic_news(country,topic.title(),readOrListen)
-
-        else: print(">> Enter read or listen!")
-
-    else: print(">> No news for this country")
-
-# If user inputs a unavailable option
-else: print(">> Invalid input!")
-         
