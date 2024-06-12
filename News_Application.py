@@ -93,7 +93,10 @@ def display_main_menu():
     Returns:
     None                     
     """
-    print("\nChoose an option to get the latest news:")
+
+    line = '--'
+    print(f"\n{line*10} Welcome to the News Fetcher {line*10}\n")
+    print(">> Choose an option to get the latest news")
     print(">> Press 1 to get the 'Top 10' headlines from a specific country")
     print(">> Press 2 to get the 'Top 10' headlines on a specific topic")
     print(">> Press 3 to get the 'Top 10' headlines on a specific topic from a specific country")
@@ -253,6 +256,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
-
-
