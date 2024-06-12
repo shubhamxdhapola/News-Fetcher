@@ -5,6 +5,8 @@ import win32com.client
 
 # Instantiate the SAPI.spVoice dispatcher to enable text-to-speech functionality
 speaker = win32com.client.Dispatch("SAPI.spVoice")
+speaker.Voice = speaker.GetVoices().item(1)
+speaker.Rate = 0
 
 # List of valid country codes
 countries = ['ae','ar','at','au','be','bg','br','ca','ch','cn','co','cu','cz','de','eg','fr','gb','gr','hk','hu','id','ie','il','in','it',
