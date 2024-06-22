@@ -95,6 +95,9 @@ def fetch_and_display_news(country = "", topic = "", readOrListen = "", userInpu
   # Handle exceptions that occur during the request
   except requests.RequestException as e:
           print(f"An error occured : {e}")
+          
+  except: 
+      print("\n>> Can't process right now try again later...")
 
 def display_main_menu():
 
