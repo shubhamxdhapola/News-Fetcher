@@ -150,7 +150,7 @@ def get_country():
         country = input("\n>> Enter country : ").title().strip()
 
         if country in available_countries: 
-            country = country[0:2].lower() # Ensure country code is 2 characters and lowercase
+            country = available_countries[country] # Ensure country code is 2 characters and lowercase
             return country
 
         else: print(">> Sorry! no news available for this country enter a different country")
