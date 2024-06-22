@@ -8,10 +8,16 @@ speaker = win32com.client.Dispatch("SAPI.spVoice")
 speaker.Voice = speaker.GetVoices().item(1)
 speaker.Rate = 0
 
-# List of valid country codes
-countries = ['ae','ar','at','au','be','bg','br','ca','ch','cn','co','cu','cz','de','eg','fr','gb','gr','hk','hu','id','ie','il','in','it',
-             'jp','kr','lt','lv','ma','mx','my','ng','nl','no','nz','ph','pl','pt','ro','rs','ru','sa','se','sg','si','sk','th','tr','tw',
-             'ua','us','ve','za']
+# A dictionary mapping country codes to country names
+available_countries = {
+    
+    'United Arab Emirates': 'ae', 'Argentina': 'ar', 'Austria': 'at', 'Australia': 'au', 'Belgium': 'be', 'Bulgaria': 'bg', 'Brazil': 'br', 'Canada': 'ca',
+    'Switzerland': 'ch', 'China': 'cn', 'Colombia': 'co', 'Cuba': 'cu', 'Czech Republic': 'cz', 'Germany': 'de', 'Egypt': 'eg', 'France': 'fr', 'United Kingdom': 'gb',
+    'Greece': 'gr', 'Hong Kong': 'hk', 'Hungary': 'hu', 'Indonesia': 'id', 'Ireland': 'ie', 'Israel': 'il', 'India': 'in', 'Italy': 'it', 'Japan': 'jp', 'South Korea': 'kr',
+    'Lithuania': 'lt', 'Latvia': 'lv', 'Morocco': 'ma', 'Mexico': 'mx', 'Malaysia': 'my', 'Nigeria': 'ng', 'Netherlands': 'nl', 'Norway': 'no', 'New Zealand': 'nz',
+    'Philippines': 'ph', 'Poland': 'pl', 'Portugal': 'pt', 'Romania': 'ro', 'Serbia': 'rs', 'Russia': 'ru', 'Saudi Arabia': 'sa', 'Sweden': 'se', 'Singapore': 'sg',
+    'Slovenia': 'si', 'Slovakia': 'sk', 'Thailand': 'th', 'Turkey': 'tr', 'Taiwan': 'tw', 'Ukraine': 'ua', 'United States': 'us','Venezuela': 've', 'South Africa': 'za'
+}
 
 # List of valid news topics
 topics = ['Business', 'Entertainment', 'General', 'Health', 'Science', 'Technology']
@@ -57,27 +63,30 @@ def fetch_and_display_news(country = "", topic = "", readOrListen = "", userInpu
       news = json.loads(response.text)
 
       # Iterate over the top 10 headlines
-      for i in range(10):
+      for headlineNo, news in enumerate (news['articles'], 1):
 
         # Extract article details
-        headLine = i + 1
-        title = news["articles"][i]["title"]
-        description = news["articles"][i]["description"]
-        readMore = news["articles"][i]["url"]
-        source = news["articles"][i]["source"]["name"]
+        title = news["title"]
+        description = news["description"]
+        readMore = news["url"]
+        source = news["source"]["name"]
             
         # Print article details
         line = '__'
         print(line*100)
-        print(f"\n>> Headline : {headLine}")
+        print(f"\n>> Headline : {headlineNo}")
         print(f">> Title : {title}")
         print(f">> Description: {description}")
         print(f">> Read More : {readMore}")
         print(f">> Source : {source}")
+        
+        # Terminates the loop after fetching 10 headlines
+        if headlineNo == 10:
+            break 
 
         # If readOrListen is set to 'Listen', use text-to-speech to read out the article details
         if readOrListen == 'Listen':
-            speaker.Speak(f'Headline : {headLine}')
+            speaker.Speak(f'Headline : {headlineNo}')
             speaker.Speak(f'Title : {title}')
             speaker.Speak(f'Description : {description}')
             
@@ -96,7 +105,7 @@ def display_main_menu():
     None                     
     """
 
-    line = '--'
+    line = '='
     print(f"\n{line*10} Welcome to the News Fetcher {line*10}\n")
     print(">> Choose an option to get the latest news")
     print(">> Press 1 to get the 'Top 10' headlines from a specific country")
@@ -138,10 +147,10 @@ def get_country():
     attempts = 0
     while attempts < 3:
 
-        country = input("\n>> Enter country : ").lower()
-        country = country[0:2] # Ensure country code is 2 characters and lowercase
+        country = input("\n>> Enter country : ").title().strip()
 
-        if country in countries: 
+        if country in available_countries: 
+            country = country[0:2].lower() # Ensure country code is 2 characters and lowercase
             return country
 
         else: print(">> Sorry! no news available for this country enter a different country")
@@ -162,7 +171,7 @@ def get_read_or_listen():
     attempts = 0
     while attempts < 3:
 
-        readOrListen = input("\n>> Would you like to 'Read' or 'Listen' to the news? : ").title()
+        readOrListen = input("\n>> Would you like to 'Read' or 'Listen' to the news? : ").title().strip()
     
         if readOrListen in ['Read','Listen'] :
             return readOrListen
@@ -186,7 +195,7 @@ def get_topic():
     while attempts < 3:
 
         print(f'\n{possibleTopics}')
-        topic = input(">> Enter topic : ").title()
+        topic = input(">> Enter topic : ").title().strip()
 
         if topic in topics:
             return topic
@@ -240,7 +249,7 @@ def get_news(userInput):
                 if readOrListen:
                     fetch_and_display_news(country = country, topic = topic, readOrListen = readOrListen, userInput = userInput)
 
-def main():
+def start_news():
 
     """
     Main function to run the news fetching program.
@@ -257,4 +266,4 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    start_news()
