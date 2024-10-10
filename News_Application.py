@@ -5,8 +5,6 @@ import win32com.client
 
 # Instantiate the SAPI.spVoice dispatcher to enable text-to-speech functionality
 speaker = win32com.client.Dispatch("SAPI.spVoice")
-speaker.Voice = speaker.GetVoices().item(1)
-speaker.Rate = 0
 
 # A dictionary mapping country codes to country names
 available_countries = {
@@ -73,7 +71,7 @@ def fetch_and_display_news(country = "", topic = "", readOrListen = "", userInpu
             
         # Print article details
         line = '__'
-        print(line*100)
+        print(line*90)
         print(f"\n>> Headline : {headlineNo}")
         print(f">> Title : {title}")
         print(f">> Description: {description}")
